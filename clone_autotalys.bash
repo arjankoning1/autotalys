@@ -66,11 +66,11 @@ clone fudge \
 # Put the main installation script at the top level
 #
 cp autotalys_tools/bin/install_autotalys.bash .
+chmod +x install_autotalys.bash
 
 echo
 echo "Autotalys source tree created."
 echo
 echo "Now run:"
 echo "    cd $AUTOTALYS_DIR"
-echo "    chmod +x install_autotalys.bash"
 echo "    ./install_autotalys.bash"
