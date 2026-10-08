@@ -160,10 +160,16 @@ FUDGE is installed in a Python virtual environment. The current AUTOTALYS instal
 To test a successful installation, run the following sample case for niobium-93:
 
 ```bash
+~/path/to/autotalys/bin/autotalys -element Nb -mass 93 -covar -ntalys 2 -E30
+```
+
+Replace `/path/to/autotalys` with the actual directory where AUTOTALYS was installed. For example, if AUTOTALYS was installed in your home directory, use:
+
+```bash
 ~/autotalys/bin/autotalys -element Nb -mass 93 -covar -ntalys 2 -E30
 ```
 
-This example uses the executable installed in `~/autotalys/bin/` and can be launched from any working directory. Verify that the calculation completes without errors and produces the expected output files.
+The calculation can be launched from any working directory. Verify that it completes without errors and produces the expected output files.
 
 ## Recommended method
 
