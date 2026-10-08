@@ -1,6 +1,13 @@
 # AUTOTALYS
 
 AUTOTALYS is a software system for automated production and processing of nuclear data with TALYS and related codes.
+Applications include:
+
+- Automated production of nuclear data libraries (TENDL files)
+- Automated optimization to experimental data from EXFOR
+- Reaction rate libraries for astrophysics
+- Sensitivity profiles for TALYS
+- Covariance matrices
 
 This repository only contains the bootstrap scripts needed to obtain the complete AUTOTALYS source tree.
 
