@@ -55,7 +55,10 @@ for code in \
     endftables \
     autonorm \
     autoendf \
-    autotalys_tools
+    autotalys_tools \
+    resbase \
+    nubarbase \
+    fnsbase 
 do
     download arjankoning1 "$code" main
 done
