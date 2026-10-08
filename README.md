@@ -83,6 +83,7 @@ After cloning is complete:
 
 ```bash
 cd autotalys
+chmod +x install_autotalys.bash
 ./install_autotalys.bash
 ```
 
@@ -103,6 +104,7 @@ After downloading:
 
 ```bash
 cd autotalys
+chmod +x install_autotalys.bash
 ./install_autotalys.bash
 ```
 
