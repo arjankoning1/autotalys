@@ -39,7 +39,10 @@ for code in \
     endftables \
     autonorm \
     autoendf \
-    autotalys_tools
+    autotalys_tools \
+    resbase \
+    nubarbase \
+    fnsbase
 do
     clone "$code" "https://github.com/arjankoning1/${code}.git"
 done
@@ -69,4 +72,5 @@ echo "Autotalys source tree created."
 echo
 echo "Now run:"
 echo "    cd $AUTOTALYS_DIR"
+echo "    chmod +x install_autotalys.bash"
 echo "    ./install_autotalys.bash"
