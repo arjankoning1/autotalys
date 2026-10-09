@@ -3,13 +3,14 @@
 AUTOTALYS is a software system for automated production and processing of nuclear data with TALYS and related codes.
 Applications include:
 
+:q
 - Automated production of nuclear data libraries (TENDL files)
 - Automated optimization to experimental data from EXFOR
 - Reaction rate libraries for astrophysics
 - Sensitivity profiles for TALYS
 - Covariance matrices
 
-This repository only contains the bootstrap scripts needed to obtain the complete AUTOTALYS source tree.
+This repository only contains the setup scripts needed to obtain the complete AUTOTALYS source tree.
 
 Two installation methods are provided:
 
@@ -43,74 +44,69 @@ The individual packages are obtained directly from their respective GitHub repos
 
 ## Installation with Git
 
-This is the recommended method.
-
-Download `clone_autotalys.bash`, make it executable, and run it from the directory in which you want the AUTOTALYS directory to be created:
+This is the recommended method. First clone this small setup repository:
 
 ```bash
-chmod +x clone_autotalys.bash
-./clone_autotalys.bash
+git clone https://github.com/arjankoning1/autotalys.git autotalys_setup
+cd autotalys_setup
+
+bash clone_autotalys.bash "$HOME/autotalys"
+
+cd "$HOME/autotalys"
+bash install_autotalys.bash
 ```
 
-By default this creates:
-
-```text
-./autotalys/
-```
-
-For example:
-
-```bash
-cd $HOME
-./clone_autotalys.bash
-```
-
-creates:
-
-```text
-$HOME/autotalys/
-```
-
-If an explicit destination is supported by the script, it can also be given as an argument:
-
-```bash
-./clone_autotalys.bash /path/to/autotalys
-```
-
-The Git installation keeps the `.git` directories of all packages, which makes it possible to inspect changes and update individual repositories later with normal Git commands.
-
-After cloning is complete:
-
-```bash
-cd autotalys
-chmod +x install_autotalys.bash
-./install_autotalys.bash
-```
+The name `autotalys_setup` distinguishes the repository containing the download scripts from the complete AUTOTALYS source tree created at `$HOME/autotalys`. The destination must not already exist; the clone script refuses to overwrite an existing installation.
 
 The main installation script is obtained automatically from the `autotalys_tools` repository.
 
+To use another installation directory, pass its path to the clone script:
+
+```bash
+bash clone_autotalys.bash /path/to/autotalys
+cd /path/to/autotalys
+bash install_autotalys.bash
+```
+
+Without an argument, `clone_autotalys.bash` creates `autotalys/` in the current working directory.
+
+The Git installation keeps the `.git` directories of all packages, which makes it possible to inspect changes and update individual repositories later with normal Git commands.
+
+### Download only the clone script
+
+Users with Git can alternatively obtain the setup script directly:
+
+```bash
+curl -fL \
+  https://raw.githubusercontent.com/arjankoning1/autotalys/main/clone_autotalys.bash \
+  -o clone_autotalys.bash
+
+bash clone_autotalys.bash "$HOME/autotalys"
+
+cd "$HOME/autotalys"
+bash install_autotalys.bash
+```
+
 ## Installation without Git
 
-For systems without Git, use:
+Download and run the archive-based setup script:
 
 ```bash
-chmod +x download_autotalys.bash
-./download_autotalys.bash
+curl -fL \
+  https://raw.githubusercontent.com/arjankoning1/autotalys/main/download_autotalys.bash \
+  -o download_autotalys.bash
+
+bash download_autotalys.bash
+
+cd "$HOME/autotalys"
+bash install_autotalys.bash
 ```
 
-This uses `curl` to download source archives directly from GitHub and creates the same AUTOTALYS source-tree layout.
-
-After downloading:
-
-```bash
-cd autotalys
-chmod +x install_autotalys.bash
-./install_autotalys.bash
-```
+This uses `curl` to download source archives directly from GitHub and creates the AUTOTALYS source tree at `$HOME/autotalys`. The destination must not already exist.
 
 The downloaded source trees do not contain `.git` directories. They therefore cannot be updated with `git pull`.
 
-To obtain a newer version, remove the existing AUTOTALYS source tree and run `download_autotalys.bash` again.
+To obtain a newer version, preserve any local work and download a fresh source tree after moving the existing installation out of the way.
 
 The download script also performs the small adjustment required to install FUDGE from a GitHub source archive, since FUDGE normally determines its version from Git metadata.
 
@@ -144,7 +140,7 @@ directory.
 
 ## Requirements
 
-The bootstrap scripts require a Unix-like environment such as:
+The setup scripts require a Unix-like environment such as:
 
 - macOS
 - Linux
@@ -175,11 +171,7 @@ The calculation can be launched from any working directory. Verify that it compl
 
 ## Recommended method
 
-For development and regular use, the Git installation is recommended:
-
-```bash
-./clone_autotalys.bash
-```
+For development and regular use, cloning the small `autotalys_setup` repository and following the Git installation instructions above is recommended.
 
 It preserves the complete repository information and makes later updates and code development straightforward.
 
@@ -190,9 +182,11 @@ The download method is intended primarily for users who want to install AUTOTALY
 With the Git installation, individual packages can be updated from inside their directories, for example:
 
 ```bash
-cd autotalys/talys
+cd "$HOME/autotalys/talys"
 git pull
 ```
+
+To update the setup scripts themselves, run `git pull` inside `autotalys_setup`.
 
 After updating packages, rerun the relevant installation script if recompilation is required.
 
