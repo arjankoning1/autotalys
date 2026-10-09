@@ -16,7 +16,7 @@ fi
 mkdir "$AUTOTALYS_DIR"
 cd "$AUTOTALYS_DIR"
 
-echo "Cloning the entire Autotalys system"
+echo "Cloning the entire Autotalys system into " $AUTOTALYS_DIR
 echo
 
 clone()
