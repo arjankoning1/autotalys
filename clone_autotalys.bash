@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# October 6, 2026
+# October 12, 2026
 # Arjan Koning
 
 set -euo pipefail
@@ -46,6 +46,15 @@ for code in \
 do
     clone "$code" "https://github.com/arjankoning1/${code}.git"
 done
+
+#
+# Exfortables
+#
+git clone --depth=1 --filter=blob:none --no-checkout \
+    https://github.com/arjankoning1/exfortables.git exfortables
+
+git -C exfortables sparse-checkout set --no-cone '/n/' '/p/' '/g/' '/d/' '/a/' '/t/' '/h/' '/FY/'
+git -C exfortables checkout main
 
 #
 # Other codes
