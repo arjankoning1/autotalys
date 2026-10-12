@@ -63,6 +63,21 @@ do
     download arjankoning1 "$code" main
 done
 
+echo "Downloading EXFORTABLES (n, p, d, g, t, h, a, FY only)"
+
+mkdir -p exfortables
+
+curl -fL https://github.com/arjankoning1/exfortables/archive/refs/heads/main.tar.gz |
+    tar -xz -C exfortables --strip-components=1 \
+        exfortables-main/n \
+        exfortables-main/p \
+        exfortables-main/g \
+        exfortables-main/a \
+        exfortables-main/d \
+        exfortables-main/t \
+        exfortables-main/h \
+        exfortables-main/FY
+
 #
 # Other codes
 #
