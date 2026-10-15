@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# October 12, 2026
+# October 15, 2026
 # Arjan Koning
 
 set -euo pipefail
@@ -40,6 +40,7 @@ for code in \
     autonorm \
     autoendf \
     autotalys_tools \
+    resonancetables \
     resbase \
     nubarbase \
     fnsbase
