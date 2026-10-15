@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# October 7, 2026
+# October 15, 2026
 # Arjan Koning
 #
 # Download the complete Autotalys source tree without git.
@@ -56,6 +56,7 @@ for code in \
     autonorm \
     autoendf \
     autotalys_tools \
+    resonancetables \
     resbase \
     nubarbase \
     fnsbase 
