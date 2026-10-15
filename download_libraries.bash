@@ -2,8 +2,10 @@
 set -euo pipefail
 
 base="https://nds.iaea.org/talys/libraries.t6"
-mkdir -p "$HOME/libraries"
-cd "$HOME/libraries"
+LIBRARIES_DIR="${1:-$HOME/libraries}"
+
+mkdir -p "$LIBRARIES_DIR"
+cd "$LIBRARIES_DIR"
 
 for part in n-A-D n-E-J n-K-O n-P-S n-T-Z p d t h a g; do
     archive="libraries-${part}.tar"
