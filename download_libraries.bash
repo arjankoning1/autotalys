@@ -2,7 +2,7 @@
 set -euo pipefail
 
 base="https://nds.iaea.org/talys/libraries.t6"
-LIBRARIES_DIR="${1:-$HOME/libraries}"
+LIBRARIES_DIR="${1:-${LIBRARIES_DIR:-$HOME/libraries}}"
 
 mkdir -p "$LIBRARIES_DIR"
 cd "$LIBRARIES_DIR"
