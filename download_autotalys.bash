@@ -127,3 +127,12 @@ echo
 echo "Now run:"
 echo "    cd $AUTOTALYS_DIR"
 echo "    ./install_autotalys.bash"
+
+echo
+echo "OpenMC support:"
+echo "  autoopenmc is included in autotalys_tools."
+echo "  OpenMC itself is an optional external dependency."
+echo "  To install OpenMC, run:"
+echo "    cd $AUTOTALYS_DIR"
+echo "    INSTALL_OPENMC=1 ./install_autotalys.bash"
+
