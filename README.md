@@ -9,6 +9,7 @@ The small **[AUTOTALYS setup repository](https://github.com/arjankoning1/autotal
 | File | Purpose |
 | --- | --- |
 | `clone_autotalys.bash` | Clone the complete system from GitHub, retaining Git histories |
+| `update_autotalys.bash` | Incrementally update Git installations and selectively rebuild changed packages |
 | `download_autotalys.bash` | Download GitHub source archives without requiring Git |
 | `download_libraries.bash` | Optionally download the large evaluated nuclear-data collection from the IAEA |
 | `README.md` | Installation and usage instructions |
@@ -235,6 +236,46 @@ For the broader original covariance-workflow example, use:
 The last example is substantially more demanding and requires the relevant optional processing tools (including a working FUDGE installation unless `-nofudge` is specified). These are test commands, not guarantees that every optional feature has been validated on every platform.
 
 If installed somewhere other than `$HOME/autotalys`, replace that prefix with the actual installation path. The executable can be invoked from another working directory.
+
+## Incremental updates (Git installations)
+
+After the initial installation, use `update_autotalys.bash` from the small
+`autotalys_setup` repository rather than cloning the entire system again:
+
+```bash
+cd "$HOME/autotalys_setup"
+git pull --ff-only
+
+# Preview remote changes and any required builds:
+bash update_autotalys.bash "$HOME/autotalys" --dry-run
+
+# Fast-forward repositories and rebuild only those whose sources changed:
+bash update_autotalys.bash "$HOME/autotalys"
+```
+
+Other useful modes:
+
+```bash
+bash update_autotalys.bash "$HOME/autotalys" --only talys
+bash update_autotalys.bash "$HOME/autotalys" --no-build
+bash update_autotalys.bash "$HOME/autotalys" --rebuild
+```
+
+The updater fetches only new Git objects; it also clones any *missing* package
+listed in its package manifest. It preserves local source changes, never
+force-resets diverged branches, and retains EXFORTABLES's sparse checkout.
+`--dry-run` still fetches remote Git references but does not change checked-out
+files, installed executables, or symbolic links. `--rebuild` rebuilds all
+*changed* compiled packages, including those with documentation-only changes;
+unchanged packages are left alone.
+
+Source-only and data-only updates do not trigger a compiler run. In addition to
+the normal scientific codes, updated external tools can be rebuilt when their
+installation prerequisites are present. If a build fails, the source update
+remains available and the updater reports the failure; other packages continue.
+An archive-based installation (from `download_autotalys.bash`) cannot be
+updated using this Git updater. The optional `libraries/` collection and
+external OpenMC environment are not modified.
 
 ## Updating individual packages
 
