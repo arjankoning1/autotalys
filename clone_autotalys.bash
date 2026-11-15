@@ -87,8 +87,9 @@ echo "    ./install_autotalys.bash"
 
 echo
 echo "OpenMC support:"
-echo "  autoopenmc is included in autotalys_tools."
-echo "  OpenMC itself is an optional external dependency."
+echo "  autoopenmc and autoopenmc.py are included in autoendf/bin/."
+echo "  OpenMC itself is an optional Conda dependency, not a cloned repository."
 echo "  To install OpenMC, run:"
 echo "    cd $AUTOTALYS_DIR"
 echo "    INSTALL_OPENMC=1 ./install_autotalys.bash"
+echo "  The standard installer skips OpenMC unless INSTALL_OPENMC=1."
