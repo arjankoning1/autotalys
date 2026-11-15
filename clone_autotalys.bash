@@ -75,7 +75,7 @@ clone fudge \
 #
 # Put the main installation script at the top level
 #
-cp autotalys_tools/bin/install_autotalys.bash .
+mv autotalys_tools/bin/install_autotalys.bash .
 chmod +x install_autotalys.bash
 
 echo
