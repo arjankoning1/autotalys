@@ -29,6 +29,8 @@ The setup scripts obtain the following packages:
 | Selected integral data | [RESONANCETABLES](https://github.com/arjankoning1/resonancetables) | Selected thermal cross sections, resonance integrals, MACS and average resonance parameters |
 | External processing/checking tools | [NJOY2016](https://github.com/njoy/NJOY2016), [PREPRO](https://github.com/IAEA-NDS/PREPRO), [ENDF Utility Codes](https://github.com/IAEA-NDS/ENDF-utility-codes), [FUDGE](https://github.com/LLNL/fudge) | Processing, checking and translating evaluated nuclear data |
 
+OpenMC is an **optional Conda-installed transport code**, not a cloned source repository. The `autoopenmc` wrapper is provided by `autoendf/bin/`, and the overall installer can set up an OpenMC environment when explicitly requested.
+
 The setup obtains only the `n/`, `p/`, `g/`, `d/`, `a/`, `t/`, `h/` and `FY/` directories of EXFORTABLES, rather than cloning the complete repository contents. This is sufficient for using the distributed experimental tables, but **not** for rebuilding the EXFORTABLES database from its original reconstruction inputs.
 
 RESONANCETABLES is downloaded with its existing selected data tables. Reconstructing those tables from primary sources is a separate operation and may require additional databases; it is not part of the standard AUTOTALYS installation.
@@ -39,6 +41,7 @@ RESONANCETABLES is downloaded with its existing selected data tables. Reconstruc
 - Git for the recommended clone method; alternatively, `curl` and `tar` for archive downloads.
 - A Fortran compiler (for example, `gfortran`), C/C++ compilers, GNU Make and CMake for building the included codes.
 - The external programs needed by enabled processing or plotting options, such as Gnuplot and Ghostscript where appropriate.
+- Optional OpenMC: Conda (Miniforge recommended); set `INSTALL_OPENMC=1` when running the top-level installer. A working NJOY executable is also required for converting neutron ENDF files to OpenMC HDF5.
 - Python 3.11 for the current FUDGE installation procedure. The installer first checks for `pyenv` Python 3.11.15 and then for a working `python3.11` executable. FUDGE is installed in `fudge/.venv`.
 
 FUDGE installation is allowed to fail without terminating the overall installation. If it is unavailable, use `-nofudge` for AUTOTALYS runs that would otherwise attempt FUDGE checking. Other mandatory components may still cause installation to stop if their prerequisites are missing.
@@ -55,7 +58,11 @@ bash clone_autotalys.bash "$HOME/autotalys"
 
 cd "$HOME/autotalys"
 ./install_autotalys.bash
+# Optional: install or verify OpenMC as well
+INSTALL_OPENMC=1 ./install_autotalys.bash
 ```
+
+The second invocation re-runs the main installer; on a fresh installation, use `INSTALL_OPENMC=1 ./install_autotalys.bash` *instead of* the ordinary installation command if you want OpenMC.
 
 The destination **must not already exist**; the script deliberately refuses to overwrite an existing installation. The `autotalys_setup/` repository is separate from the assembled `autotalys/` directory.
 
@@ -204,7 +211,36 @@ export BEST_DIR="$TALYS_DIR/structure/best"
 export LIBRARIES_DIR="$HOME/libraries"  # Only needed for relevant external data
 ```
 
-The build of `autotalys_tools` uses the source files directly. No `DATA_ROOT` installation setting, source-path substitution or large-library download is required to compile its utilities.
+The current `autotalys_tools/install_autotalys_tools.bash` builds seven free-form Fortran utilities plus `njoycovx`, using `DATA_ROOT` (by default, the parent of `autotalys_tools/`) to configure data paths in **temporary** source copies. It does not modify the checked-out source. The data root must exist, but the full evaluated-library download is not required just to compile the programs. If you move the installation, rerun this installer to update embedded paths. See the AUTOTALYS_TOOLS README for standalone `DATA_ROOT` configuration.
+
+## Optional OpenMC transport validation
+
+OpenMC is **not cloned** by `clone_autotalys.bash` or `download_autotalys.bash`. Its wrapper (`autoopenmc` and `autoopenmc.py`) comes from `autoendf/bin/`; the top-level installer links these entry points into `autotalys/bin/`.
+
+To install or verify OpenMC while installing the assembled system, use:
+
+```bash
+cd "$HOME/autotalys"
+INSTALL_OPENMC=1 ./install_autotalys.bash
+```
+
+With `INSTALL_OPENMC=1`, the installer looks for Conda (including common Miniforge locations), creates or updates the `openmc` environment with `openmc`, `numpy`, and `matplotlib`, verifies the `openmc` executable and Python module, and writes `config/openmc.conf`. `OPENMC_CONDA` may select a Conda executable and `OPENMC_ENV` may select another environment name. If installation fails, AUTOTALYS continues without OpenMC; inspect the warning and verify OpenMC separately. Without `INSTALL_OPENMC=1`, the main installer skips this optional step.
+
+OpenMC additionally needs **neutron nuclear data** for transport. The standalone `autoopenmc` wrapper calls NJOY to convert a specified neutron ENDF evaluation to HDF5, then performs a transport calculation. For comparisons with other evaluations, the optional `LIBRARIES_DIR` collection is needed; `-worldlibs none` avoids that dependency. The full `libraries/` download is **not required** for a single-evaluation neutron-only run.
+
+For example, from a directory containing a valid neutron ENDF file:
+
+```bash
+"$HOME/autotalys/bin/autoopenmc" \
+  -file n-Fe056.tendl -element Fe -mass 56 \
+  -worldlibs none -no-photons
+```
+
+The wrapper requires NJOY on `PATH` (or `-njoybin /absolute/path/to/njoy`). Its default transport test uses a 10 cm sphere and 14 MeV isotropic point neutron source; density defaults to 7.874 g/cm³, which should be overridden with `-density` for other materials. It writes neutron leakage data, plots, per-evaluation runs, and `manifest.json` into the chosen output directory (`-outdir`).
+
+For **coupled neutron–photon transport**, obtain the matching *photoatomic* OpenMC HDF5 files and a `cross_sections.xml` pointing to them separately. Set `OPENMC_CROSS_SECTIONS=/path/to/cross_sections.xml` or pass `-photon-xs /path/to/cross_sections.xml` and omit `-no-photons`. Downloading the full evaluated ENDF `libraries/` collection does **not** automatically install these photoatomic HDF5 files or create the XML index.
+
+The high-level AUTOTALYS driver supports `-openmc` for **neutron-projectile, general-purpose ENDF evaluations**; it requires ENDF production to be enabled and currently calls `autoopenmc` with `-no-photons`. Thus `-openmc` in the main driver performs neutron-only leakage validation, while direct `autoopenmc` allows coupled neutron–photon transport. See the [AUTOENDF README](https://github.com/arjankoning1/autoendf#optional-openmc-transport-validation) for command options.
 
 ## Testing AUTOTALYS
 
